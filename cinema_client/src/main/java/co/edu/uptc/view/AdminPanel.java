@@ -9,6 +9,7 @@ import co.edu.uptc.view.adminoptions.CreateScreeningPanel;
 import co.edu.uptc.view.adminoptions.DeleteScreeningPanel;
 import co.edu.uptc.view.adminoptions.EditMoviePanel;
 import co.edu.uptc.view.adminoptions.JButtonPanel;
+import co.edu.uptc.view.adminoptions.ReportPanel;
 
 import java.awt.*;
 
@@ -39,6 +40,10 @@ public class AdminPanel extends JPanel {
 
     public void showPanel(String name) {
         cardLayout.show(contentPanel, name);
+    }
+        public void backToMenu(){
+           showPanel(BUTTONS);
+        
     }
 
     public MainFrame getMainFrame() {

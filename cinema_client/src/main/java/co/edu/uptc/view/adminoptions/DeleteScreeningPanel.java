@@ -1,13 +1,94 @@
 package co.edu.uptc.view.adminoptions;
 
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 
+import co.edu.uptc.enums.AdminOptions;
+import co.edu.uptc.enums.Msg;
 import co.edu.uptc.view.AdminPanel;
 
-public class DeleteScreeningPanel extends JPanel{
+public class DeleteScreeningPanel extends JPanel {
+    private AdminPanel admin;
+    private JTextField auditoriumNameField;
+    private JTextField dateField;
+    private JTextField movieNameField;
+    private JButton submitButton;
+    private JButton backButton;
 
-    public DeleteScreeningPanel(AdminPanel adminPanel) {
-        //TODO Auto-generated constructor stub
+    public DeleteScreeningPanel(AdminPanel admin) {
+        this.admin = admin;
+        setLayout(new BorderLayout());
+
+        JPanel formPanel = new JPanel(new GridLayout(4, 2, 10, 10));
+
+        formPanel.add(new JLabel("Auditorium Name:"));
+        auditoriumNameField = new JTextField();
+        formPanel.add(auditoriumNameField);
+
+        formPanel.add(new JLabel("Date (yyyy-MM-ddTHH:mm):"));
+        dateField = new JTextField();
+        formPanel.add(dateField);
+
+        formPanel.add(new JLabel("Movie Name:"));
+        movieNameField = new JTextField();
+        formPanel.add(movieNameField);
+
+        backButton = new JButton("Volver");
+        formPanel.add(backButton);
+        submitButton = new JButton("Eliminar Función");
+        formPanel.add(submitButton);
+
+        add(formPanel, BorderLayout.CENTER);
+
+        submitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                sendDeleteScreeningInfo();
+                cleanTextFields();
+            }
+        });
+
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                admin.backToMenu();
+            }
+        });
     }
 
+    public void cleanTextFields() {
+        auditoriumNameField.setText("");
+        dateField.setText("");
+        movieNameField.setText("");
+    }
+
+    public void sendDeleteScreeningInfo() {
+        String auditoriumName = auditoriumNameField.getText();
+        String dateStr = dateField.getText();
+        String movieName = movieNameField.getText();
+
+        try {
+            LocalDateTime date = LocalDateTime.parse(dateStr);
+
+            // Enviar la información al controlador
+            admin.getMainFrame().getController().sendMsg(AdminOptions.DELETE_SCREENING.name(), Msg.DONE.name(),
+                    new Object[] { auditoriumName, date, movieName });
+
+            if ((boolean) admin.getMainFrame().getController().reciveMsg().getData()) {
+                JOptionPane.showMessageDialog(DeleteScreeningPanel.this, "Screening deleted successfully!");
+            } else {
+                JOptionPane.showMessageDialog(DeleteScreeningPanel.this, "Screening deletion failed!");
+            }
+        } catch (DateTimeParseException e) {
+            JOptionPane.showMessageDialog(DeleteScreeningPanel.this, "Invalid date format! Use yyyy-MM-ddTHH:mm");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(DeleteScreeningPanel.this, "Error deleting the screening: " + e.getMessage());
+        } finally {
+            System.out.println("Finalizando operación de eliminar función.");
+        }
+    }
 }

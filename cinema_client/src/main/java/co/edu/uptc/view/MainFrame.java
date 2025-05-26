@@ -5,7 +5,9 @@ import javax.swing.JFrame;
 
 import co.edu.uptc.controller.Controller;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 @Getter
+@NoArgsConstructor
 public class MainFrame extends JFrame {
     private LoginFrame loginPanel;
     private AdminPanel adminPanel;
@@ -19,7 +21,7 @@ public class MainFrame extends JFrame {
     public void init() {
         setTitle("Sistema");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(800, 1000);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 

@@ -92,22 +92,22 @@ public class JButtonPanel extends JPanel {
     }
 
     private void editMovieData() {
-        // Lógica para editar los datos de una película
+         adminPanel.showPanel(AdminOptions.EDIT_MOVIE_DATA.name());
     }
 
     private void createScreening() {
-        // Lógica para crear una función
+         adminPanel.showPanel(AdminOptions.CREATE_SCREENING.name());
     }
 
     private void deleteScreening() {
-        // Lógica para eliminar una función
+         adminPanel.showPanel(AdminOptions.DELETE_SCREENING.name());
     }
 
     private void configurateAuditorium() {
-        // Lógica para configurar una sala
+         adminPanel.showPanel(AdminOptions.CONFIGURATE_AUDITORIUM.name());
     }
 
     private void generateReport() {
-        // Lógica para generar un informe
+         adminPanel.showPanel(AdminOptions.GENERATE_REPORT.name());
     }
 }
