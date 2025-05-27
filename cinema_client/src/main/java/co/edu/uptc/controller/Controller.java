@@ -47,9 +47,11 @@ public class Controller {
         }
         return null;
     }
-public <T> JsonResponse<T> reciveMsg(Class<T> clazz) {
+
+    public <T> JsonResponse<T> reciveMsg(Class<T> clazz) {
         try {
-            JsonResponse msg = conectionManager.receiveMessage(clazz);
+            JsonResponse msg = conectionManager.receiveMessage();
+            msg = conectionManager.convertData(msg, clazz);
             return msg;
         } catch (IOException e) {
             // TODO Auto-generated catch block

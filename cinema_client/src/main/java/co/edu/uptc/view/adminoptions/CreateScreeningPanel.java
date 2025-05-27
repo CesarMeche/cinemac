@@ -88,8 +88,6 @@ public class CreateScreeningPanel extends JPanel {
             JOptionPane.showMessageDialog(CreateScreeningPanel.this, "Invalid date format! Use yyyy-MM-ddTHH:mm");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(CreateScreeningPanel.this, "Error creating the screening: " + e.getMessage());
-        } finally {
-            System.out.println("Finalizando operación de crear función.");
-        }
+        } 
     }
 }

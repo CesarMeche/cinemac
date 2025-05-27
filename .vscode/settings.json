@@ -1,3 +1,7 @@
 {
     "java.configuration.updateBuildConfiguration": "interactive"
-}
+    ,"workbench.colorCustomizations": {
+  "tab.activeBackground": "#7c3aed",   // Cambia el color de fondo de la pestaña activa
+  "tab.activeForeground": "#ffffff",  
+  "tab.activeBorder": "#7c3aed" 
+}}

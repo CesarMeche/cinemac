@@ -92,6 +92,7 @@ public class ReportPanel extends JPanel {
     }
 
     private void sendReportDates() {
+        //TODO por hacer
         try {
             admin.getMainFrame().getController().sendMsg(
                     AdminOptions.GENERATE_REPORT.name(),

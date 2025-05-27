@@ -26,15 +26,15 @@ public class DeleteScreeningPanel extends JPanel {
         JPanel formPanel = new JPanel(new GridLayout(4, 2, 10, 10));
 
         formPanel.add(new JLabel("Auditorium Name:"));
-        auditoriumNameField = new JTextField();
+        auditoriumNameField = new JTextField("papaya");
         formPanel.add(auditoriumNameField);
 
         formPanel.add(new JLabel("Date (yyyy-MM-ddTHH:mm):"));
-        dateField = new JTextField();
+        dateField = new JTextField("2025-05-27T11:40");
         formPanel.add(dateField);
 
         formPanel.add(new JLabel("Movie Name:"));
-        movieNameField = new JTextField();
+        movieNameField = new JTextField("mikus");
         formPanel.add(movieNameField);
 
         backButton = new JButton("Volver");
@@ -48,7 +48,7 @@ public class DeleteScreeningPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 sendDeleteScreeningInfo();
-                cleanTextFields();
+                //cleanTextFields();
             }
         });
 
@@ -87,8 +87,6 @@ public class DeleteScreeningPanel extends JPanel {
             JOptionPane.showMessageDialog(DeleteScreeningPanel.this, "Invalid date format! Use yyyy-MM-ddTHH:mm");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(DeleteScreeningPanel.this, "Error deleting the screening: " + e.getMessage());
-        } finally {
-            System.out.println("Finalizando operación de eliminar función.");
-        }
+        } 
     }
 }

@@ -52,11 +52,7 @@ public class ConectionManager {
         dataOutput.flush();
     }
 
-    public <T> JsonResponse<T> receiveMessage(Class<T> clazz) throws IOException {
-        String jsonMessage = dataInput.readUTF();
-        Type type = TypeToken.getParameterized(JsonResponse.class, clazz).getType();
-        return gson.fromJson(jsonMessage, type);
-    }
+
     public JsonResponse receiveMessage() throws IOException {
         String jsonMessage = dataInput.readUTF();
         return gson.fromJson(jsonMessage, JsonResponse.class);
