@@ -47,5 +47,14 @@ public class Controller {
         }
         return null;
     }
-
+public <T> JsonResponse<T> reciveMsg(Class<T> clazz) {
+        try {
+            JsonResponse msg = conectionManager.receiveMessage(clazz);
+            return msg;
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

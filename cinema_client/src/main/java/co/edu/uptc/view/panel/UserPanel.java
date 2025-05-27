@@ -3,7 +3,6 @@ package co.edu.uptc.view.panel;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.JPanel;
 
@@ -47,6 +46,7 @@ public class UserPanel extends JPanel {
     }
 
     public void addPanel(JPanel panel, String name) {
+        contentPanel.add(panel,name);
         panels.put(name, panel);
     }
 

@@ -9,6 +9,7 @@ import java.time.format.DateTimeParseException;
 
 import co.edu.uptc.enums.AdminOptions;
 import co.edu.uptc.enums.Msg;
+import co.edu.uptc.network.JsonResponse;
 import co.edu.uptc.view.panel.AdminPanel;
 
 public class CreateScreeningPanel extends JPanel {
@@ -26,15 +27,15 @@ public class CreateScreeningPanel extends JPanel {
         JPanel formPanel = new JPanel(new GridLayout(4, 2, 10, 10));
 
         formPanel.add(new JLabel("Auditorium Name:"));
-        auditoriumNameField = new JTextField();
+        auditoriumNameField = new JTextField("papaya");
         formPanel.add(auditoriumNameField);
 
         formPanel.add(new JLabel("Date (yyyy-MM-ddTHH:mm):"));
-        dateField = new JTextField();
+        dateField = new JTextField("2025-05-27T11:40");
         formPanel.add(dateField);
 
         formPanel.add(new JLabel("Movie Name:"));
-        movieNameField = new JTextField();
+        movieNameField = new JTextField("mikus");
         formPanel.add(movieNameField);
 
         backButton = new JButton("Volver");
@@ -48,7 +49,7 @@ public class CreateScreeningPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 sendScreeningInfo();
-                cleanTextFields();
+                // cleanTextFields();
             }
         });
 
@@ -72,13 +73,13 @@ public class CreateScreeningPanel extends JPanel {
         String movieName = movieNameField.getText();
 
         try {
-            LocalDateTime date = LocalDateTime.parse(dateStr);
+            // LocalDateTime date = LocalDateTime.parse(dateStr);
 
             // Enviar la información al controlador
-            admin.getMainFrame().getController().sendMsg(AdminOptions.CREATE_SCREENING.name(), Msg.DONE.name(),
-                    new Object[] { auditoriumName, date, movieName });
-
-            if ((boolean) admin.getMainFrame().getController().reciveMsg().getData()) {
+            admin.getMainFrame().getController().sendMsg(AdminOptions.CREATE_SCREENING.name(), Msg.DONE.name(),new Object[] { auditoriumName, dateStr, movieName });
+            System.out.println("");
+            JsonResponse<Boolean> response = admin.getMainFrame().getController().reciveMsg();
+            if (response.getData()) {
                 JOptionPane.showMessageDialog(CreateScreeningPanel.this, "Screening created successfully!");
             } else {
                 JOptionPane.showMessageDialog(CreateScreeningPanel.this, "Screening creation failed!");

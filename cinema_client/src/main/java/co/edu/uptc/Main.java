@@ -9,7 +9,7 @@ import co.edu.uptc.view.MainFrame;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Hello world!");
-        Controller c= new Controller("localhost", 1234);
+        Controller c= new Controller("localhost", 1235);
         try {
             c.connect();
         } catch (IOException e) {
