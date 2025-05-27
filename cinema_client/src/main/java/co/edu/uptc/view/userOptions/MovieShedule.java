@@ -23,63 +23,59 @@ import co.edu.uptc.view.panel.UserPanel;
 public class MovieShedule extends JPanel {
     private UserPanel user;
     private CardLayout mainCardLayout;
-
-    private ArrayList<JButton> moviesList;
     // movies panels
     private JPanel movies;
-    private JPanel MoviesButtonsPanel;
+    private JPanel moviesButtonsPanel;
     private JButton backButton;
-
+    private SelectSeat selectSeat;
     public MovieShedule(UserPanel userPanel) {
         this.user = userPanel;
         mainCardLayout = new CardLayout();
         setLayout(mainCardLayout);
 
-
     }
 
     private void setMoviesJPanels() {
+        //
         movies = new JPanel();
         movies.setLayout(new BorderLayout());
+        // agrega movies al Jpanel/mainCardLayout con el titulo movies
         add(movies, "movies");
-        addMoviesButtons();
+        moviesButtonsPanel = new JPanel();
         movies.add(new Label("PELICULAS"), BorderLayout.NORTH);
         backButtonConf();
         movies.add(backButton, BorderLayout.SOUTH);
+
     }
 
     private void recibeMovies() {
-        moviesList = new ArrayList<>();
         // recive*7w7*
         user.getMainFrame().getController().sendMsg(UserOptions.GET_MOVIE_SCHEDULE.name(),
                 UserOptions.GET_MOVIE_SCHEDULE.name(), null);
         // guarda*
         JsonResponse<Schedule> moviesResponse = user.getMainFrame().getController().reciveMsg(Schedule.class);
-
+        setMoviesJPanels();
         // recorre para añadir botones con su nombre de peli
         for (Map.Entry<String, ArrayList<Screening>> entry : moviesResponse.getData().getScreenings().entrySet()) {
+            // recoge data
             String title = entry.getKey();
-            // crea la data
             ArrayList<Screening> screeningList = entry.getValue();
+            // crea el panel datamovie y lo agrega a Jpanel/mainCardLayout con el titulo de
+            // la pelicula como contrains
             JPanel AUX = createScreeningPanel(screeningList, title);
             add(AUX, title);
-            //
+            // crea el boton que muestra el datamovie
             JButton button = new JButton(title);
-            // crea botones de lista
-            button.addActionListener(e -> mainCardLayout.show(AUX, title));
-            moviesList.add(button);
-
+            // crea la accion que muestra el datapanel del mainCardLayout
+            button.addActionListener(e -> mainCardLayout.show(this, title));
+            // agreGA el boton que muestra el datamovie al panel moviesButtonsPanel
+            moviesButtonsPanel.add(button);
         }
-        setMoviesJPanels();
+        // setea el panel movie
 
-    }
+        movies.add(moviesButtonsPanel, BorderLayout.CENTER);
+        mainCardLayout.show(this, "movies");
 
-    private void addMoviesButtons() {
-        MoviesButtonsPanel = new JPanel();
-        for (JButton jButton : moviesList) {
-            MoviesButtonsPanel.add(jButton);
-        }
-        movies.add(MoviesButtonsPanel, BorderLayout.CENTER);
     }
 
     private void backButtonConf() {
@@ -116,9 +112,9 @@ public class MovieShedule extends JPanel {
     }
 
     private JButton localBackButton() {
-        JButton parcialBackButton=new JButton("Volver");
-        parcialBackButton.addActionListener(e->{
-            mainCardLayout.show(movies, "movies");
+        JButton parcialBackButton = new JButton("Volver");
+        parcialBackButton.addActionListener(e -> {
+            mainCardLayout.show(this, "movies");
         });
         return parcialBackButton;
     }
@@ -129,9 +125,22 @@ public class MovieShedule extends JPanel {
         String hourString = String.format("%02d:%02d", dateTime.getHour(), dateTime.getMinute());
         JPanel screeningPanelAUX = new JPanel();
         JButton horario = new JButton("Fecha: " + dateString + "\nHora: " + hourString);
+        horario.addActionListener(e->{
+           selectSeat(screening);
+        });
         screeningPanelAUX.add(horario);
         return screeningPanelAUX;
 
+    }
+    private void selectSeat(Screening screening){
+        JPanel selectSeatAux = new JPanel();
+        selectSeatAux.setLayout(new BorderLayout());
+        selectSeatAux.add(new Label(screening.getMovie().getTitle()),BorderLayout.NORTH);
+        selectSeat= new SelectSeat(user,screening);
+        selectSeatAux.add(selectSeat, BorderLayout.CENTER);
+        selectSeatAux.add(localBackButton(), BorderLayout.SOUTH);
+        add(selectSeatAux,"select");
+        mainCardLayout.show(this,"select");
     }
 
     private String[] getMovieData(Movie movie) {
@@ -141,8 +150,8 @@ public class MovieShedule extends JPanel {
     }
 
     public void init() {
-        if (moviesList == null) {
+
             recibeMovies();
-        }
+
     }
 }

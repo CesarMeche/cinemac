@@ -30,8 +30,6 @@ public class UserPanel extends JPanel {
 
         addPanel(new MovieShedule(this), UserOptions.GET_MOVIE_SCHEDULE.name());
 
-        addPanel(new SelectSeat(this), UserOptions.SELECT_SEAT.name());
-
         addPanel(new CreateBook(this), UserOptions.CREATE_BOOK.name());
 
         addPanel(new CheckBook(this), UserOptions.CHECK_BOOK.name());
@@ -56,7 +54,7 @@ public class UserPanel extends JPanel {
 
     public void backToMenu() {
         showPanel(BUTTONS);
-
+        
     }
 
     public MainFrame getMainFrame() {

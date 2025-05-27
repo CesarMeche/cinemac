@@ -16,7 +16,6 @@ import co.edu.uptc.view.userOptions.MovieShedule;
 public class UserMenu extends JPanel {
     private UserPanel userPanel;
     private JButton getMovieScheduleBtn;
-    private JButton selectSeatBtn;
     private JButton createBookBtn;
     private JButton checkBookBtn;
     private JButton validateBookBtn;
@@ -31,17 +30,15 @@ public class UserMenu extends JPanel {
         title.setFont(new Font("Arial", Font.BOLD, 20));
         add(title, BorderLayout.NORTH);
 
-        JPanel buttonPanel = new JPanel(new GridLayout(6, 1, 10, 10));
+        JPanel buttonPanel = new JPanel(new GridLayout(5, 1, 10, 10));
 
         getMovieScheduleBtn = new JButton("Ver Horarios de Películas");
-        selectSeatBtn = new JButton("Seleccionar Asiento");
         createBookBtn = new JButton("Reservar");
         checkBookBtn = new JButton("Consultar Reserva");
         validateBookBtn = new JButton("Validar Reserva");
         cancelBookBtn = new JButton("Cancelar Reserva");
 
         buttonPanel.add(getMovieScheduleBtn);
-        buttonPanel.add(selectSeatBtn);
         buttonPanel.add(createBookBtn);
         buttonPanel.add(checkBookBtn);
         buttonPanel.add(validateBookBtn);
@@ -53,7 +50,6 @@ public class UserMenu extends JPanel {
 
     private void initActions() {
         getMovieScheduleBtn.addActionListener(e -> handleAction("GET_MOVIE_SCHEDULE"));
-        selectSeatBtn.addActionListener(e -> handleAction("SELECT_SEAT"));
         createBookBtn.addActionListener(e -> handleAction("CREATE_BOOK"));
         checkBookBtn.addActionListener(e -> handleAction("CHECK_BOOK"));
         validateBookBtn.addActionListener(e -> handleAction("VALIDATE_BOOK"));
@@ -65,9 +61,6 @@ public class UserMenu extends JPanel {
         switch (userOptions) {
             case GET_MOVIE_SCHEDULE:
                 getMovieSchedule();
-                break;
-            case SELECT_SEAT:
-                selectSeat();
                 break;
             case CREATE_BOOK:
                 createBook();
@@ -90,10 +83,6 @@ public class UserMenu extends JPanel {
         MovieShedule ms = (MovieShedule) userPanel.getPanels().get(UserOptions.GET_MOVIE_SCHEDULE.name());
         ms.init();
         userPanel.showPanel(UserOptions.GET_MOVIE_SCHEDULE.name());
-    }
-
-    private void selectSeat() {
-        userPanel.showPanel(UserOptions.SELECT_SEAT.name());
     }
 
     private void createBook() {
