@@ -76,7 +76,7 @@ public class CreateScreeningPanel extends JPanel {
             // LocalDateTime date = LocalDateTime.parse(dateStr);
 
             // Enviar la información al controlador
-            admin.getMainFrame().getController().sendMsg(AdminOptions.CREATE_SCREENING.name(), Msg.DONE.name(),new Object[] { auditoriumName, dateStr, movieName });
+            admin.getMainFrame().getController().sendMsg(AdminOptions.CREATE_SCREENING.name(), Msg.DONE.name(),new String[] { auditoriumName, dateStr, movieName });
             System.out.println("");
             JsonResponse<Boolean> response = admin.getMainFrame().getController().reciveMsg();
             if (response.getData()) {
