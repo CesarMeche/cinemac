@@ -5,8 +5,7 @@ import javax.swing.*;
 import co.edu.uptc.enums.AdminOptions;
 import co.edu.uptc.enums.Msg;
 import co.edu.uptc.model.pojos.Movie;
-import co.edu.uptc.view.AdminPanel;
-import co.edu.uptc.view.MainFrame;
+import co.edu.uptc.view.panel.AdminPanel;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -53,9 +52,6 @@ public class AddMoviePanel extends JPanel {
         formPanel.add(backButton);
         submitButton = new JButton("crear Pelicula");
         formPanel.add(submitButton);
-
-        // Añadimos un placeholder para que la cuadrícula quede simétrica
-        //formPanel.add(new JLabel(""));
 
         add(formPanel, BorderLayout.CENTER);
 

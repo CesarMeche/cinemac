@@ -1,4 +1,4 @@
-package co.edu.uptc.view.adminoptions;
+package co.edu.uptc.view.menus;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -10,9 +10,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import co.edu.uptc.enums.AdminOptions;
-import co.edu.uptc.view.AdminPanel;
+import co.edu.uptc.view.panel.AdminPanel;
 
-public class JButtonPanel extends JPanel {
+public class AdminMenu extends JPanel {
     private AdminPanel adminPanel;
     private JButton addMovieBtn;
     private JButton editMovieBtn;
@@ -21,7 +21,7 @@ public class JButtonPanel extends JPanel {
     private JButton configAuditoriumBtn;
     private JButton generateReportBtn;
 
-    public JButtonPanel( AdminPanel adminPanel) {
+    public AdminMenu( AdminPanel adminPanel) {
         this.adminPanel=adminPanel;
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));

@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 
 import co.edu.uptc.enums.AdminOptions;
 import co.edu.uptc.enums.Msg;
-import co.edu.uptc.view.AdminPanel;
+import co.edu.uptc.view.panel.AdminPanel;
 
 public class EditMoviePanel extends JPanel {
     private AdminPanel admin;

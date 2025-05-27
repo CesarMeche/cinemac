@@ -9,7 +9,7 @@ import java.time.format.DateTimeParseException;
 
 import co.edu.uptc.enums.AdminOptions;
 import co.edu.uptc.enums.Msg;
-import co.edu.uptc.view.AdminPanel;
+import co.edu.uptc.view.panel.AdminPanel;
 
 public class CreateScreeningPanel extends JPanel {
     private AdminPanel admin;

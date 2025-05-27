@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import javax.swing.JFrame;
 
 import co.edu.uptc.controller.Controller;
+import co.edu.uptc.view.panel.AdminPanel;
+import co.edu.uptc.view.panel.UserPanel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 @Getter
@@ -11,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class MainFrame extends JFrame {
     private LoginFrame loginPanel;
     private AdminPanel adminPanel;
+    private UserPanel userPanel;
     private Controller controller;
     public MainFrame(Controller controller) {
         this.controller=controller;
@@ -35,7 +38,17 @@ public class MainFrame extends JFrame {
         }
         adminPanel = new AdminPanel(this);
         add(adminPanel, BorderLayout.CENTER);
-        revalidate(); // Refresca el layout
-        repaint();    // Vuelve a pintar la ventana
+        revalidate(); 
+        repaint();   
+    }
+
+    public void showUserPanel() {
+        if (loginPanel != null) {
+            remove(loginPanel); 
+        }
+        userPanel = new UserPanel(this);
+        add(userPanel, BorderLayout.CENTER);
+        revalidate(); 
+        repaint(); 
     }
 }

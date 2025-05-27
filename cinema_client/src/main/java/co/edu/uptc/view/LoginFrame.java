@@ -27,22 +27,33 @@ public class LoginFrame extends JPanel {
         usuarioField = new JTextField();
         inputPanel.add(usuarioField);
 
-        inputPanel.add(new JLabel("Contraseña:"));
-        contrasenaField = new JPasswordField();
-        inputPanel.add(contrasenaField);
 
         add(inputPanel, BorderLayout.CENTER);
 
         entrarButton = new JButton("Entrar");
+        JPanel b= new JPanel();
         initButton();
-        add(entrarButton, BorderLayout.SOUTH);
+        b.add(entrarButton);
+        JButton userBtu = new JButton("user");
+        userBtu.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainFrame.showUserPanel();
+                mainFrame.getController().sendMsg(TOOL_TIP_TEXT_KEY, "user", null);
+            }
+            
+        });
+        b.add(userBtu);
+        add(b, BorderLayout.SOUTH);
     }
 
-    public void initButton() {
+    private void initButton() {
         entrarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mainFrame.showAdminPanel();
+                mainFrame.getController().sendMsg(TOOL_TIP_TEXT_KEY, "admin", null);
             }
         });
     }

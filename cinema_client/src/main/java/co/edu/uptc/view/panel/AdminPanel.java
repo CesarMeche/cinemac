@@ -1,15 +1,16 @@
-package co.edu.uptc.view;
+package co.edu.uptc.view.panel;
 
 import javax.swing.*;
 
 import co.edu.uptc.enums.AdminOptions;
+import co.edu.uptc.view.MainFrame;
 import co.edu.uptc.view.adminoptions.AddMoviePanel;
 import co.edu.uptc.view.adminoptions.ConfigAuditoriumPanel;
 import co.edu.uptc.view.adminoptions.CreateScreeningPanel;
 import co.edu.uptc.view.adminoptions.DeleteScreeningPanel;
 import co.edu.uptc.view.adminoptions.EditMoviePanel;
-import co.edu.uptc.view.adminoptions.JButtonPanel;
 import co.edu.uptc.view.adminoptions.ReportPanel;
+import co.edu.uptc.view.menus.AdminMenu;
 
 import java.awt.*;
 
@@ -25,7 +26,7 @@ public class AdminPanel extends JPanel {
         this.cardLayout = new CardLayout();
         this.contentPanel = new JPanel(cardLayout);
 
-        contentPanel.add(new JButtonPanel(this), BUTTONS);
+        contentPanel.add(new AdminMenu(this), BUTTONS);
         contentPanel.add(new AddMoviePanel(this), AdminOptions.ADD_MOVIE.name());
         contentPanel.add(new EditMoviePanel(this), AdminOptions.EDIT_MOVIE_DATA.name());
         contentPanel.add(new CreateScreeningPanel(this), AdminOptions.CREATE_SCREENING.name());
