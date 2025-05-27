@@ -2,15 +2,13 @@ package co.edu.uptc.view.userOptions;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.LayoutManager;
+import java.awt.GridLayout;
+import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -20,59 +18,72 @@ import co.edu.uptc.model.pojos.Movie;
 import co.edu.uptc.model.pojos.Schedule;
 import co.edu.uptc.model.pojos.Screening;
 import co.edu.uptc.network.JsonResponse;
-import co.edu.uptc.view.panel.AdminPanel;
 import co.edu.uptc.view.panel.UserPanel;
 
 public class MovieShedule extends JPanel {
     private UserPanel user;
-    private JPanel screeningPanel;
-    private CardLayout moviesCardLayout;
+    private CardLayout mainCardLayout;
+
+    private ArrayList<JButton> moviesList;
+    // movies panels
+    private JPanel movies;
+    private JPanel MoviesButtonsPanel;
     private JButton backButton;
 
     public MovieShedule(UserPanel userPanel) {
         this.user = userPanel;
-        setLayout(new BorderLayout());
-        screeningPanel = new JPanel();
-        moviesCardLayout = new CardLayout();
-        screeningPanel.setLayout(moviesCardLayout);
+        mainCardLayout = new CardLayout();
+        setLayout(mainCardLayout);
+
+
     }
 
-    public void init() {
-        recibeMovies();
+    private void setMoviesJPanels() {
+        movies = new JPanel();
+        movies.setLayout(new BorderLayout());
+        add(movies, "movies");
+        addMoviesButtons();
+        movies.add(new Label("PELICULAS"), BorderLayout.NORTH);
+        backButtonConf();
+        movies.add(backButton, BorderLayout.SOUTH);
     }
 
     private void recibeMovies() {
-        user.getMainFrame().getController().sendMsg(UserOptions.GET_MOVIE_SCHEDULE.name(), UserOptions.GET_MOVIE_SCHEDULE.name(), null);
-        JsonResponse<Schedule> movies = user.getMainFrame().getController().reciveMsg(Schedule.class);
+        moviesList = new ArrayList<>();
+        // recive*7w7*
+        user.getMainFrame().getController().sendMsg(UserOptions.GET_MOVIE_SCHEDULE.name(),
+                UserOptions.GET_MOVIE_SCHEDULE.name(), null);
+        // guarda*
+        JsonResponse<Schedule> moviesResponse = user.getMainFrame().getController().reciveMsg(Schedule.class);
 
-        if (movies.getData() == null || movies.getData().getScreenings() == null) {
-            System.out.println("No hay datos");
-            return;
-        }
-
-        ArrayList<JButton> moviesList = new ArrayList<>();
-        for (Map.Entry<String, ArrayList<Screening>> entry : movies.getData().getScreenings().entrySet()) {
+        // recorre para añadir botones con su nombre de peli
+        for (Map.Entry<String, ArrayList<Screening>> entry : moviesResponse.getData().getScreenings().entrySet()) {
             String title = entry.getKey();
-
+            // crea la data
+            ArrayList<Screening> screeningList = entry.getValue();
+            JPanel AUX = createScreeningPanel(screeningList, title);
+            add(AUX, title);
+            //
             JButton button = new JButton(title);
-            button.addActionListener(e -> moviesCardLayout.show(screeningPanel, title));
+            // crea botones de lista
+            button.addActionListener(e -> mainCardLayout.show(AUX, title));
             moviesList.add(button);
 
-            ArrayList<Screening> screeningList = entry.getValue();
-            createScreeningPanel(screeningList, title);
         }
+        setMoviesJPanels();
 
-        // Añade los botones en la parte superior, por ejemplo
-        JPanel buttonPanel = new JPanel();
+    }
+
+    private void addMoviesButtons() {
+        MoviesButtonsPanel = new JPanel();
         for (JButton jButton : moviesList) {
-            buttonPanel.add(jButton);
+            MoviesButtonsPanel.add(jButton);
         }
-        add(buttonPanel, BorderLayout.NORTH);
-        add(screeningPanel, BorderLayout.CENTER);
-        revalidate();
-        repaint();
+        movies.add(MoviesButtonsPanel, BorderLayout.CENTER);
+    }
+
+    private void backButtonConf() {
         backButton = new JButton("volver");
-        add(backButton,BorderLayout.SOUTH);
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -82,46 +93,56 @@ public class MovieShedule extends JPanel {
         });
     }
 
-    private void createScreeningPanel(ArrayList<Screening> screenings, String title) {
-        JPanel movie = new JPanel();
-        // Aquí puedes personalizar 'movie' con datos de screenings
-        movie.add(new JLabel("Funciones de: " + title));
+    private JPanel createScreeningPanel(ArrayList<Screening> screenings, String title) {
+        // TODO CREAR CLASE PARA LOS CUADROS HIJOS DE MAIN
+        JPanel dataMovie = new JPanel();
+        dataMovie.setLayout(new BorderLayout());
+        // movie data
+        dataMovie.setLayout(new GridLayout(6, 1, 10, 10));
+        dataMovie.add(new JLabel("Funciones de: " + title));
         String[] movieData = getMovieData(screenings.get(0).getMovie());
+        JPanel datPanel = new JPanel();
         for (String string : movieData) {
-            movie.add(new JLabel(string));
+            datPanel.add(new JLabel(string));
         }
-        LocalDateTime a;
+        // screenings data
         for (Screening screening : screenings) {
-            LocalDateTime dateTime = screening.getDate();
-
-            // Obtener día y mes
-            String dateString = dateTime.getDayOfMonth() + "/" + dateTime.getMonthValue();
-
-            // Obtener hora y minutos
-            String hourString = String.format("%02d:%02d", dateTime.getHour(), dateTime.getMinute());
-
-            // Crear un panel para este screening
-            JPanel screeningPanel = new JPanel();
-            screeningPanel.setLayout(new BoxLayout(screeningPanel, BoxLayout.Y_AXIS));
-
-            // Añadir los JLabels
-            screeningPanel.add(new JLabel("Fecha: " + dateString));
-            screeningPanel.add(new JLabel("Hora: " + hourString));
-
-            // Separación o borde para que se vea mejor
-            screeningPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-
-            // AQUÍ ya decides dónde quieres agregarlo,
-            // por ejemplo, a tu panel de película:
-            movie.add(screeningPanel);
+            datPanel.add(createDateButtons(screening));
         }
+        dataMovie.add(new Label(), BorderLayout.NORTH);
+        dataMovie.add(datPanel, BorderLayout.CENTER);
+        dataMovie.add(localBackButton(), BorderLayout.SOUTH);
+        return dataMovie;
+    }
 
-        screeningPanel.add(movie, title);
+    private JButton localBackButton() {
+        JButton parcialBackButton=new JButton("Volver");
+        parcialBackButton.addActionListener(e->{
+            mainCardLayout.show(movies, "movies");
+        });
+        return parcialBackButton;
+    }
+
+    private JPanel createDateButtons(Screening screening) {
+        LocalDateTime dateTime = screening.getDate();
+        String dateString = dateTime.getDayOfMonth() + "/" + dateTime.getMonthValue();
+        String hourString = String.format("%02d:%02d", dateTime.getHour(), dateTime.getMinute());
+        JPanel screeningPanelAUX = new JPanel();
+        JButton horario = new JButton("Fecha: " + dateString + "\nHora: " + hourString);
+        screeningPanelAUX.add(horario);
+        return screeningPanelAUX;
+
     }
 
     private String[] getMovieData(Movie movie) {
         return new String[] { "Calificacion por edad: " + movie.getRate(), "Calificacion: " + movie.getCalification(),
                 "Duracion: " + movie.getDurationInMinutes(),
                 "Sinopsis: " + movie.getMovieSynopsis() };
+    }
+
+    public void init() {
+        if (moviesList == null) {
+            recibeMovies();
+        }
     }
 }
