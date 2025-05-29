@@ -9,6 +9,8 @@ import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Queue;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -18,6 +20,7 @@ import co.edu.uptc.model.pojos.Movie;
 import co.edu.uptc.model.pojos.Schedule;
 import co.edu.uptc.model.pojos.Screening;
 import co.edu.uptc.network.JsonResponse;
+import co.edu.uptc.structures.avltree.AVLTree;
 import co.edu.uptc.view.panel.UserPanel;
 
 public class MovieShedule extends JPanel {
@@ -56,10 +59,10 @@ public class MovieShedule extends JPanel {
         JsonResponse<Schedule> moviesResponse = user.getMainFrame().getController().reciveMsg(Schedule.class);
         setMoviesJPanels();
         // recorre para añadir botones con su nombre de peli
-        for (Map.Entry<String, ArrayList<Screening>> entry : moviesResponse.getData().getScreenings().entrySet()) {
+        for (Map.Entry<String, AVLTree<Screening>> entry : moviesResponse.getData().getScreenings().entrySet()) {
             // recoge data
             String title = entry.getKey();
-            ArrayList<Screening> screeningList = entry.getValue();
+            ArrayList<Screening> screeningList = entry.getValue().getInOrder();
             // crea el panel datamovie y lo agrega a Jpanel/mainCardLayout con el titulo de
             // la pelicula como contrains
             JPanel AUX = createScreeningPanel(screeningList, title);
