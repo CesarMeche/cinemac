@@ -1,15 +1,15 @@
 package co.edu.uptc.view.adminoptions;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.border.EmptyBorder;
 
 import co.edu.uptc.enums.AdminOptions;
 import co.edu.uptc.enums.AudithoriumSize;
 import co.edu.uptc.enums.EditAudithorium;
 import co.edu.uptc.enums.Msg;
 import co.edu.uptc.view.panel.AdminPanel;
+
+import java.awt.*;
 
 public class ConfigAuditoriumPanel extends JPanel {
     private AdminPanel admin;
@@ -20,7 +20,6 @@ public class ConfigAuditoriumPanel extends JPanel {
     private JButton submitButton;
     private JButton backButton;
 
-    // CardLayout
     private JPanel cardPanel;
     private JTextField dataField;
     private JComboBox<String> sizeComboBox;
@@ -28,54 +27,74 @@ public class ConfigAuditoriumPanel extends JPanel {
     public ConfigAuditoriumPanel(AdminPanel admin) {
         this.admin = admin;
         setLayout(new BorderLayout());
+        setBackground(Color.decode("#f2f2f2"));
+        setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        JPanel formPanel = new JPanel(new GridLayout(4, 2, 10, 10));
+        JLabel titleLabel = new JLabel("Configurar Auditorio", JLabel.CENTER);
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
+        titleLabel.setForeground(Color.decode("#1c5052"));
+        add(titleLabel, BorderLayout.NORTH);
 
-        formPanel.add(new JLabel("Nombre del Auditorio:"));
-        auditoriumNameField = new JTextField("papaya");
-        formPanel.add(auditoriumNameField);
-        // Panel de "entrada de datos" (cambia según la opción)
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBackground(Color.decode("#f2f2f2"));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(12, 12, 12, 12);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        gbc.gridx = 0; gbc.gridy = 0;
+        formPanel.add(createLabel("Nombre del Auditorio:"), gbc);
+
+        gbc.gridx = 1;
+        auditoriumNameField = createTextField("papaya");
+        formPanel.add(auditoriumNameField, gbc);
+
+        gbc.gridx = 0; gbc.gridy++;
+        formPanel.add(createLabel("Dato o Tamaño:"), gbc);
+
+        gbc.gridx = 1;
         cardPanel = new JPanel(new CardLayout());
+        cardPanel.setBackground(Color.decode("#f2f2f2"));
 
-        // Campo para "Nombre"
-        dataField = new JTextField("yuyu");
+        dataField = createTextField("yuyu");
+        sizeComboBox = new JComboBox<>(new String[]{"Pequeño", "Mediano", "Grande"});
+        sizeComboBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
+
         cardPanel.add(dataField, "Nombre");
-
-        // Campo para "Tamaño"
-        sizeComboBox = new JComboBox<>(new String[] { "Pequeño", "Mediano", "Grande" });
         cardPanel.add(sizeComboBox, "Tamaño");
+        formPanel.add(cardPanel, gbc);
 
-        formPanel.add(new JLabel("Dato o Tamaño:"));
-        formPanel.add(cardPanel);
+        gbc.gridx = 0; gbc.gridy++;
+        formPanel.add(createLabel("Opción:"), gbc);
 
-        option = EditAudithorium.NAME.name();
-        String[] options = { "Nombre", "Tamaño" };
-        formPanel.add(new JLabel("Opción:"));
+        gbc.gridx = 1;
+        String[] options = {"Nombre", "Tamaño"};
         optionComboBox = new JComboBox<>(options);
-        editComboBoxAction();
-        formPanel.add(optionComboBox);
+        optionComboBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        formPanel.add(optionComboBox, gbc);
 
-        backButton = new JButton("Volver");
-        formPanel.add(backButton);
-        submitButton = new JButton("Configurar Auditorio");
-        formPanel.add(submitButton);
+        gbc.gridx = 0; gbc.gridy++;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
+        buttonsPanel.setBackground(Color.decode("#f2f2f2"));
+        backButton = createButton("Volver");
+        submitButton = createButton("Configurar Auditorio");
+        buttonsPanel.add(backButton);
+        buttonsPanel.add(submitButton);
+        formPanel.add(buttonsPanel, gbc);
 
         add(formPanel, BorderLayout.CENTER);
 
-        submitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                sendAuditoriumConfigInfo();
-                cleanTextFields();
-            }
+        option = EditAudithorium.NAME.name();
+        editComboBoxAction();
+
+        submitButton.addActionListener(e -> {
+            sendAuditoriumConfigInfo();
+            cleanTextFields();
         });
 
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                admin.backToMenu();
-            }
-        });
+        backButton.addActionListener(e -> admin.backToMenu());
     }
 
     private void editComboBoxAction() {
@@ -95,13 +114,35 @@ public class ConfigAuditoriumPanel extends JPanel {
         });
     }
 
+    private JLabel createLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("SansSerif", Font.BOLD, 14));
+        label.setForeground(Color.decode("#1c5052"));
+        return label;
+    }
+
+    private JTextField createTextField(String defaultText) {
+        JTextField tf = new JTextField(defaultText);
+        tf.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        return tf;
+    }
+
+    private JButton createButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("SansSerif", Font.BOLD, 16));
+        button.setBackground(Color.decode("#348e91"));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
+        return button;
+    }
+
     public void cleanTextFields() {
         dataField.setText("");
         auditoriumNameField.setText("");
         sizeComboBox.setSelectedIndex(0);
         option = EditAudithorium.NAME.name();
 
-        // Restaurar la vista inicial
         CardLayout cl = (CardLayout) cardPanel.getLayout();
         cl.show(cardPanel, "Nombre");
         optionComboBox.setSelectedIndex(0);
@@ -123,24 +164,43 @@ public class ConfigAuditoriumPanel extends JPanel {
     }
 
     public void sendAuditoriumConfigInfo() {
-        String data=getSelectedSizeEnum();
+        String data;
 
-        String auditoriumName = auditoriumNameField.getText();
+        if (option.equals(EditAudithorium.NAME.name())) {
+            data = dataField.getText().trim();
+            if (data.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor ingresa un nombre válido.", "Atención", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        } else if (option.equals(EditAudithorium.SIZE.name())) {
+            data = getSelectedSizeEnum();
+        } else {
+            JOptionPane.showMessageDialog(this, "Opción inválida.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String auditoriumName = auditoriumNameField.getText().trim();
+        if (auditoriumName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor ingresa el nombre del auditorio.", "Atención", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
         try {
-            admin.getMainFrame().getController().sendMsg(AdminOptions.CONFIGURATE_AUDITORIUM.name(), Msg.DONE.name(),
-                    new Object[] { data, auditoriumName, option });
+            admin.getMainFrame().getController().sendMsg(
+                    AdminOptions.CONFIGURATE_AUDITORIUM.name(),
+                    Msg.DONE.name(),
+                    new Object[]{data, auditoriumName, option});
 
-            if ((boolean) admin.getMainFrame().getController().reciveMsg().getData()) {
-                JOptionPane.showMessageDialog(ConfigAuditoriumPanel.this,
-                        "¡Configuración del auditorio actualizada correctamente!");
+            boolean success = (boolean) admin.getMainFrame().getController().reciveMsg().getData();
+
+            if (success) {
+                JOptionPane.showMessageDialog(this, "¡Configuración del auditorio actualizada correctamente!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(ConfigAuditoriumPanel.this,
-                        "¡No se pudo actualizar la configuración del auditorio!");
+                JOptionPane.showMessageDialog(this, "¡No se pudo actualizar la configuración del auditorio!", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(ConfigAuditoriumPanel.this,
-                    "Error actualizando la configuración: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Error actualizando la configuración: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
     }
 }

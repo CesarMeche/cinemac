@@ -1,6 +1,7 @@
 package co.edu.uptc.view.adminoptions;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 import co.edu.uptc.enums.AdminOptions;
 import co.edu.uptc.enums.Msg;
@@ -9,7 +10,6 @@ import co.edu.uptc.view.panel.AdminPanel;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class AddMoviePanel extends JPanel {
     private AdminPanel admin;
@@ -24,55 +24,131 @@ public class AddMoviePanel extends JPanel {
     public AddMoviePanel(AdminPanel admin) {
         this.admin = admin;
         setLayout(new BorderLayout());
+        setBackground(Color.decode("#f2f2f2"));
+        setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        JPanel formPanel = new JPanel(new GridLayout(6, 2, 10, 10));
+        JLabel titleLabel = new JLabel("Agregar Película", JLabel.CENTER);
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
+        titleLabel.setForeground(Color.decode("#1c5052"));
+        add(titleLabel, BorderLayout.NORTH);
 
-        formPanel.add(new JLabel("Title:"));
-        titleField = new JTextField();
-        formPanel.add(titleField);
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBackground(Color.decode("#f2f2f2"));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        formPanel.add(new JLabel("Calification:"));
-        calificationField = new JTextField();
-        formPanel.add(calificationField);
+        // Etiquetas y campos
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        formPanel.add(createLabel("Título:"), gbc);
+        gbc.gridx = 1;
+        titleField = createTextField();
+        formPanel.add(titleField, gbc);
 
-        formPanel.add(new JLabel("Movie Synopsis:"));
-        movieSynopsisArea = new JTextArea(3, 20);
+        gbc.gridx = 0;
+        gbc.gridy++;
+        formPanel.add(createLabel("Calificación:"), gbc);
+        gbc.gridx = 1;
+        calificationField = createTextField();
+        formPanel.add(calificationField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy++;
+        formPanel.add(createLabel("Sinopsis:"), gbc);
+        gbc.gridx = 1;
+        movieSynopsisArea = new JTextArea(4, 20);
+        movieSynopsisArea.setLineWrap(true);
+        movieSynopsisArea.setWrapStyleWord(true);
         JScrollPane scrollPane = new JScrollPane(movieSynopsisArea);
-        formPanel.add(scrollPane);
+        formPanel.add(scrollPane, gbc);
 
-        formPanel.add(new JLabel("Rate:"));
-        rateField = new JTextField();
-        formPanel.add(rateField);
+        gbc.gridx = 0;
+        gbc.gridy++;
+        formPanel.add(createLabel("Tarifa:"), gbc);
+        gbc.gridx = 1;
+        rateField = createTextField();
+        formPanel.add(rateField, gbc);
 
-        formPanel.add(new JLabel("Duration (minutes):"));
-        durationField = new JTextField();
-        formPanel.add(durationField);
+        gbc.gridx = 0;
+        gbc.gridy++;
+        formPanel.add(createLabel("Duración (minutos):"), gbc);
+        gbc.gridx = 1;
+        durationField = createTextField();
+        formPanel.add(durationField, gbc);
 
-        backButton = new JButton("volver");
-        formPanel.add(backButton);
-        submitButton = new JButton("crear Pelicula");
-        formPanel.add(submitButton);
+        // Botones
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
+        buttonsPanel.setBackground(Color.decode("#f2f2f2"));
+
+        backButton = createButton("Volver");
+        submitButton = createButton("Crear Película");
+
+        buttonsPanel.add(backButton);
+        buttonsPanel.add(submitButton);
+
+        formPanel.add(buttonsPanel, gbc);
 
         add(formPanel, BorderLayout.CENTER);
 
-        submitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                sendMovieInfo();
+        // Listeners
+        submitButton.addActionListener(this::handleSubmit);
+        backButton.addActionListener(e -> admin.backToMenu());
+    }
+
+    private JLabel createLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("SansSerif", Font.BOLD, 14));
+        label.setForeground(Color.decode("#1c5052"));
+        return label;
+    }
+
+    private JTextField createTextField() {
+        JTextField tf = new JTextField(20);
+        tf.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        return tf;
+    }
+
+    private JButton createButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("SansSerif", Font.BOLD, 16));
+        button.setBackground(Color.decode("#348e91"));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
+        return button;
+    }
+
+    private void handleSubmit(ActionEvent e) {
+        String title = titleField.getText().trim();
+        String calification = calificationField.getText().trim();
+        String synopsis = movieSynopsisArea.getText().trim();
+        String rate = rateField.getText().trim();
+        String duration = durationField.getText().trim();
+
+        try {
+            admin.getMainFrame().getController().sendMsg(AdminOptions.ADD_MOVIE.name(), Msg.DONE.name(),
+                    new Movie(title, calification, synopsis, rate, duration));
+
+            boolean success = (boolean) admin.getMainFrame().getController().reciveMsg().getData();
+
+            if (success) {
+                JOptionPane.showMessageDialog(this, "¡Película agregada exitosamente!", "Éxito",
+                        JOptionPane.INFORMATION_MESSAGE);
                 cleanTextFields();
-
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo agregar la película.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
-
-        });
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                admin.backToMenu();
-            }
-
-        });
-
-
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Ocurrió un error al agregar la película.", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void cleanTextFields() {
@@ -82,28 +158,4 @@ public class AddMoviePanel extends JPanel {
         rateField.setText("");
         durationField.setText("");
     }
-
-    public void sendMovieInfo() {
-        String title = titleField.getText();
-        String calification = calificationField.getText();
-        String synopsis = movieSynopsisArea.getText();
-        String rate = rateField.getText();
-        String duration = durationField.getText();
-        try {
-            admin.getMainFrame().getController().sendMsg(AdminOptions.ADD_MOVIE.name(), Msg.DONE.name(),
-                    new Movie(title, calification, synopsis, rate, duration));
-
-            if ((boolean) admin.getMainFrame().getController().reciveMsg().getData()) {
-
-                JOptionPane.showMessageDialog(AddMoviePanel.this, "Movie added successfully!");
-            } else {
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(AddMoviePanel.this, "Movie doesn't added successfully!");
-            // TODO: handle exception
-        } 
-        
-
-    }
-
 }

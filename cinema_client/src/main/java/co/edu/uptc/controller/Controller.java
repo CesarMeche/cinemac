@@ -1,13 +1,11 @@
 package co.edu.uptc.controller;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.Socket;
 
-import co.edu.uptc.model.pojos.Movie;
 import co.edu.uptc.network.ConectionManager;
 import co.edu.uptc.network.JsonResponse;
+import co.edu.uptc.view.MainFrame;
 
 public class Controller {
 
@@ -25,6 +23,8 @@ public class Controller {
     public void connect() throws IOException {
         socket = new Socket(host, port);
         conectionManager = new ConectionManager(socket);
+        MainFrame lf= new MainFrame(this);
+        lf.init();
     }
 
     public <T> void sendMsg(String type, String status, T data) {
@@ -33,7 +33,6 @@ public class Controller {
             conectionManager.sendMessage(response);
         } catch (Exception e) {
             e.printStackTrace();
-            // Aquí puedes agregar manejo adicional si es necesario
         }
     }
 

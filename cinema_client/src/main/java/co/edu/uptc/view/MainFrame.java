@@ -27,7 +27,7 @@ public class MainFrame extends JFrame {
         setSize(800, 1000);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
-
+        setResizable(false);
         add(loginPanel, BorderLayout.CENTER); 
         setVisible(true);
     }

@@ -3,7 +3,6 @@ package co.edu.uptc;
 import java.io.IOException;
 
 import co.edu.uptc.controller.Controller;
-import co.edu.uptc.view.LoginFrame;
 import co.edu.uptc.view.MainFrame;
 
 public class Main {
@@ -16,8 +15,7 @@ public class Main {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        MainFrame lf= new MainFrame(c);
-        lf.init();
+        
 
     }
 }

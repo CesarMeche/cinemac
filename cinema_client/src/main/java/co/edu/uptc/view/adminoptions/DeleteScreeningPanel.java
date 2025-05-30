@@ -1,21 +1,20 @@
 package co.edu.uptc.view.adminoptions;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
+import co.edu.uptc.enums.AdminOptions;
+import co.edu.uptc.enums.Msg;
+import co.edu.uptc.view.panel.AdminPanel;
+
+import org.jdatepicker.impl.*;
+
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Properties;
-
-import org.jdatepicker.impl.*;
-
-import co.edu.uptc.enums.AdminOptions;
-import co.edu.uptc.enums.Msg;
-import co.edu.uptc.view.panel.AdminPanel;
 
 public class DeleteScreeningPanel extends JPanel {
     private AdminPanel admin;
@@ -30,62 +29,106 @@ public class DeleteScreeningPanel extends JPanel {
     public DeleteScreeningPanel(AdminPanel admin) {
         this.admin = admin;
         setLayout(new BorderLayout());
+        setBackground(Color.decode("#f2f2f2"));
+        setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        JPanel formPanel = new JPanel(new GridLayout(5, 2, 10, 10));
+        JLabel titleLabel = new JLabel("Eliminar Función", JLabel.CENTER);
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
+        titleLabel.setForeground(Color.decode("#1c5052"));
+        add(titleLabel, BorderLayout.NORTH);
 
-        formPanel.add(new JLabel("Auditorium Name:"));
-        auditoriumNameField = new JTextField("papaya");
-        formPanel.add(auditoriumNameField);
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBackground(Color.decode("#f2f2f2"));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(12, 12, 12, 12);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        formPanel.add(new JLabel("Date:"));
+        gbc.gridx = 0; gbc.gridy = 0;
+        formPanel.add(createLabel("Nombre del Auditorio:"), gbc);
+
+        gbc.gridx = 1;
+        auditoriumNameField = createTextField("papaya");
+        formPanel.add(auditoriumNameField, gbc);
+
+        gbc.gridx = 0; gbc.gridy++;
+        formPanel.add(createLabel("Fecha:"), gbc);
+
+        gbc.gridx = 1;
         datePicker = createDatePicker();
-        formPanel.add(datePicker);
+        formPanel.add(datePicker, gbc);
 
-        formPanel.add(new JLabel("Time (HH:mm):"));
-        JPanel timePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        gbc.gridx = 0; gbc.gridy++;
+        formPanel.add(createLabel("Hora (HH:mm):"), gbc);
+
+        gbc.gridx = 1;
+        JPanel timePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        timePanel.setBackground(Color.decode("#f2f2f2"));
         hourComboBox = createHourComboBox();
         minuteComboBox = createMinuteComboBox();
         timePanel.add(hourComboBox);
-        timePanel.add(new JLabel(":"));
+        JLabel colon = new JLabel(":");
+        colon.setFont(new Font("SansSerif", Font.BOLD, 16));
+        colon.setForeground(Color.decode("#1c5052"));
+        timePanel.add(colon);
         timePanel.add(minuteComboBox);
-        formPanel.add(timePanel);
+        formPanel.add(timePanel, gbc);
 
-        formPanel.add(new JLabel("Movie Name:"));
-        movieNameField = new JTextField("mikus");
-        formPanel.add(movieNameField);
+        gbc.gridx = 0; gbc.gridy++;
+        formPanel.add(createLabel("Nombre de la Película:"), gbc);
 
-        backButton = new JButton("Volver");
-        formPanel.add(backButton);
-        submitButton = new JButton("Eliminar Función");
-        formPanel.add(submitButton);
+        gbc.gridx = 1;
+        movieNameField = createTextField("mikus");
+        formPanel.add(movieNameField, gbc);
+
+        gbc.gridx = 0; gbc.gridy++;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
+        buttonsPanel.setBackground(Color.decode("#f2f2f2"));
+        backButton = createButton("Volver");
+        submitButton = createButton("Eliminar Función");
+        buttonsPanel.add(backButton);
+        buttonsPanel.add(submitButton);
+
+        formPanel.add(buttonsPanel, gbc);
 
         add(formPanel, BorderLayout.CENTER);
 
-        submitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                sendDeleteScreeningInfo();
-                // cleanTextFields();
-            }
-        });
+        submitButton.addActionListener(e -> sendDeleteScreeningInfo());
+        backButton.addActionListener(e -> admin.backToMenu());
+    }
 
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                admin.backToMenu();
-            }
-        });
+    private JLabel createLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("SansSerif", Font.BOLD, 14));
+        label.setForeground(Color.decode("#1c5052"));
+        return label;
+    }
+
+    private JTextField createTextField(String defaultText) {
+        JTextField tf = new JTextField(defaultText);
+        tf.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        return tf;
+    }
+
+    private JButton createButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("SansSerif", Font.BOLD, 16));
+        button.setBackground(Color.decode("#348e91"));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
+        return button;
     }
 
     private JDatePanelImpl createDatePicker() {
         SqlDateModel model = new SqlDateModel();
         Properties p = new Properties();
-        p.put("text.today", "Today");
-        p.put("text.month", "Month");
-        p.put("text.year", "Year");
-
-        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-        return datePanel;
+        p.put("text.today", "Hoy");
+        p.put("text.month", "Mes");
+        p.put("text.year", "Año");
+        return new JDatePanelImpl(model, p);
     }
 
     private JComboBox<String> createHourComboBox() {
@@ -93,14 +136,16 @@ public class DeleteScreeningPanel extends JPanel {
         for (int i = 0; i < 24; i++) {
             comboBox.addItem(String.format("%02d", i));
         }
+        comboBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
         return comboBox;
     }
 
     private JComboBox<String> createMinuteComboBox() {
         JComboBox<String> comboBox = new JComboBox<>();
-        for (int i = 0; i < 60; i += 5) { // Saltos de 5 minutos
+        for (int i = 0; i < 60; i += 5) {
             comboBox.addItem(String.format("%02d", i));
         }
+        comboBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
         return comboBox;
     }
 
@@ -113,44 +158,44 @@ public class DeleteScreeningPanel extends JPanel {
     }
 
     public void sendDeleteScreeningInfo() {
-        String auditoriumName = auditoriumNameField.getText();
-        String movieName = movieNameField.getText();
+        String auditoriumName = auditoriumNameField.getText().trim();
+        String movieName = movieNameField.getText().trim();
 
         try {
-            // Obtener fecha
-            Date selectedDate = (Date) datePicker.getModel().getValue();
+            java.sql.Date selectedDate = (java.sql.Date) datePicker.getModel().getValue();
             if (selectedDate == null) {
                 throw new IllegalArgumentException("¡Por favor selecciona una fecha!");
             }
             LocalDate date = selectedDate.toLocalDate();
 
-            // Obtener hora
             int hour = Integer.parseInt((String) hourComboBox.getSelectedItem());
             int minute = Integer.parseInt((String) minuteComboBox.getSelectedItem());
             LocalTime time = LocalTime.of(hour, minute);
 
-            // Combinar fecha y hora
             LocalDateTime dateTime = LocalDateTime.of(date, time);
-
-            // Formatear fecha y hora como String
             String dateTimeStr = dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
-            // Enviar la información al controlador
             admin.getMainFrame().getController().sendMsg(
                     AdminOptions.DELETE_SCREENING.name(),
                     Msg.DONE.name(),
                     new String[]{ auditoriumName, dateTimeStr, movieName });
 
             boolean deleted = (boolean) admin.getMainFrame().getController().reciveMsg().getData();
+
             if (deleted) {
-                JOptionPane.showMessageDialog(DeleteScreeningPanel.this, "¡Función eliminada exitosamente!");
+                JOptionPane.showMessageDialog(this, "¡Función eliminada exitosamente!", "Éxito",
+                        JOptionPane.INFORMATION_MESSAGE);
+                cleanTextFields();
             } else {
-                JOptionPane.showMessageDialog(DeleteScreeningPanel.this, "Error al eliminar la función.");
+                JOptionPane.showMessageDialog(this, "Error al eliminar la función.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
+
         } catch (IllegalArgumentException e) {
-            JOptionPane.showMessageDialog(DeleteScreeningPanel.this, e.getMessage());
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Atención", JOptionPane.WARNING_MESSAGE);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(DeleteScreeningPanel.this, "Error al eliminar la función: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Error al eliminar la función: " + e.getMessage(), "Error",
+                    JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }

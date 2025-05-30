@@ -1,6 +1,7 @@
 package co.edu.uptc.view.menus;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
 
@@ -21,36 +22,50 @@ public class AdminMenu extends JPanel {
     private JButton configAuditoriumBtn;
     private JButton generateReportBtn;
 
-    public AdminMenu( AdminPanel adminPanel) {
-        this.adminPanel=adminPanel;
-        setLayout(new BorderLayout());
-        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+    public AdminMenu(AdminPanel adminPanel) {
+    this.adminPanel = adminPanel;
+    setLayout(new BorderLayout(20, 20));
+    setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+    setBackground(Color.decode("#f2f2f2"));
 
-        JLabel title = new JLabel("Panel de Administración", JLabel.CENTER);
-        title.setFont(new Font("Arial", Font.BOLD, 20));
-        add(title, BorderLayout.NORTH);
+    JLabel title = new JLabel("Panel de Administración", JLabel.CENTER);
+    title.setFont(new Font("SansSerif", Font.BOLD, 22));
+    title.setForeground(Color.decode("#1c5052"));
+    add(title, BorderLayout.NORTH);
 
-        // Panel de botones en forma de menú
-        JPanel buttonPanel = new JPanel(new GridLayout(6, 1, 10, 10));
+    JPanel buttonPanel = new JPanel(new GridLayout(6, 1, 12, 12));
+    buttonPanel.setBackground(Color.decode("#f2f2f2"));
 
-        addMovieBtn = new JButton("Agregar Película");
-        editMovieBtn = new JButton("Editar Datos de Película");
-        createScreeningBtn = new JButton("Crear Función");
-        deleteScreeningBtn = new JButton("Eliminar Función");
-        configAuditoriumBtn = new JButton("Configurar Auditorio");
-        generateReportBtn = new JButton("Generar Reporte");
+    // Crea y estiliza los botones con el mismo estilo para todos
+    addMovieBtn = createStyledButton("Agregar Película");
+    editMovieBtn = createStyledButton("Editar Datos de Película");
+    createScreeningBtn = createStyledButton("Crear Función");
+    deleteScreeningBtn = createStyledButton("Eliminar Función");
+    configAuditoriumBtn = createStyledButton("Configurar Auditorio");
+    generateReportBtn = createStyledButton("Generar Reporte");
 
-        // Añadir botones al panel
-        buttonPanel.add(addMovieBtn);
-        buttonPanel.add(editMovieBtn);
-        buttonPanel.add(createScreeningBtn);
-        buttonPanel.add(deleteScreeningBtn);
-        buttonPanel.add(configAuditoriumBtn);
-        buttonPanel.add(generateReportBtn);
+    buttonPanel.add(addMovieBtn);
+    buttonPanel.add(editMovieBtn);
+    buttonPanel.add(createScreeningBtn);
+    buttonPanel.add(deleteScreeningBtn);
+    buttonPanel.add(configAuditoriumBtn);
+    buttonPanel.add(generateReportBtn);
 
-        add(buttonPanel, BorderLayout.CENTER);
-         initActions();
-    }
+    add(buttonPanel, BorderLayout.CENTER);
+
+    initActions();
+}
+
+private JButton createStyledButton(String text) {
+    JButton button = new JButton(text);
+    button.setFont(new Font("SansSerif", Font.BOLD, 16));
+    button.setBackground(Color.decode("#348e91"));
+    button.setForeground(Color.WHITE);
+    button.setFocusPainted(false);
+    button.setBorder(BorderFactory.createEmptyBorder(12, 20, 12, 20));
+    // Puedes agregar aquí un efecto hover si quieres
+    return button;
+}
 
     private void initActions() {
         addMovieBtn.addActionListener(e -> handleAction("ADD_MOVIE"));
