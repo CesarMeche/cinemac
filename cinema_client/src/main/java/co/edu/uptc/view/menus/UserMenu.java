@@ -1,6 +1,7 @@
 package co.edu.uptc.view.menus;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
 
@@ -21,23 +22,37 @@ public class UserMenu extends JPanel {
 
     public UserMenu(UserPanel userPanel) {
         this.userPanel = userPanel;
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(20, 20));
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        setBackground(Color.decode("#f2f2f2"));
 
         JLabel title = new JLabel("Panel de Usuario", JLabel.CENTER);
-        title.setFont(new Font("Arial", Font.BOLD, 20));
+        title.setFont(new Font("SansSerif", Font.BOLD, 22));
+        title.setForeground(Color.decode("#1c5052"));
         add(title, BorderLayout.NORTH);
 
-        JPanel buttonPanel = new JPanel(new GridLayout(4, 1, 10, 10));
+        JPanel buttonPanel = new JPanel(new GridLayout(2, 1, 12, 12));
+        buttonPanel.setBackground(Color.decode("#f2f2f2"));
 
-        getMovieScheduleBtn = new JButton("Ver Horarios de Películas");
-        validateBookBtn = new JButton("Validar Reserva");
+        getMovieScheduleBtn = createStyledButton("Ver Horarios de Películas");
+        validateBookBtn = createStyledButton("Validar Reserva");
 
         buttonPanel.add(getMovieScheduleBtn);
         buttonPanel.add(validateBookBtn);
 
         add(buttonPanel, BorderLayout.CENTER);
+
         initActions();
+    }
+
+    private JButton createStyledButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("SansSerif", Font.BOLD, 16));
+        button.setBackground(Color.decode("#348e91"));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createEmptyBorder(12, 20, 12, 20));
+        return button;
     }
 
     private void initActions() {
@@ -49,28 +64,25 @@ public class UserMenu extends JPanel {
         UserOptions userOptions = UserOptions.valueOf(action);
         switch (userOptions) {
             case GET_MOVIE_SCHEDULE:
-                getMovieSchedule();
+                showMovieSchedule();
                 break;
             case VALIDATE_BOOK:
-                validateBook();
+                showValidateBook();
                 break;
             default:
                 System.out.println("Acción no reconocida: " + action);
         }
     }
 
-    private void getMovieSchedule() {
+    private void showMovieSchedule() {
         MovieShedule ms = (MovieShedule) userPanel.getPanels().get(UserOptions.GET_MOVIE_SCHEDULE.name());
         ms.init();
         userPanel.showPanel(UserOptions.GET_MOVIE_SCHEDULE.name());
     }
 
-
-    private void validateBook() {
-        ValidateBook vb=(ValidateBook) userPanel.getPanels().get(UserOptions.VALIDATE_BOOK.name());
+    private void showValidateBook() {
+        ValidateBook vb = (ValidateBook) userPanel.getPanels().get(UserOptions.VALIDATE_BOOK.name());
         vb.init();
         userPanel.showPanel(UserOptions.VALIDATE_BOOK.name());
     }
-
-
 }
