@@ -30,8 +30,6 @@ public class UserPanel extends JPanel {
 
         addPanel(new MovieShedule(this), UserOptions.GET_MOVIE_SCHEDULE.name());
 
-        addPanel(new CreateBook(this), UserOptions.CREATE_BOOK.name());
-
         addPanel(new CheckBook(this), UserOptions.CHECK_BOOK.name());
 
         addPanel(new ValidateBook(this), UserOptions.VALIDATE_BOOK.name());

@@ -9,7 +9,6 @@ import co.edu.uptc.enums.Msg;
 import co.edu.uptc.enums.UserOptions;
 import co.edu.uptc.model.pojos.Screening;
 import co.edu.uptc.model.pojos.Seat;
-import co.edu.uptc.view.adminoptions.AddMoviePanel;
 import co.edu.uptc.view.panel.UserPanel;
 
 public class SelectSeat extends JPanel {
@@ -59,9 +58,8 @@ public class SelectSeat extends JPanel {
 
         JButton backButton = new JButton("Comprar");
         backButton.addActionListener(e -> {
-            String[] data = { screening.getMovie().getTitle(), screening.getScreeningAuditorium().getName(),screening.getDate().toString(),screening.getDate().toString(), selectedSeat.getRow(), "" + selectedSeat.getSeatNumber() };
-            user.getMainFrame().getController().sendMsg(UserOptions.CHECK_BOOK.name(), UserOptions.SELECT_SEAT.name(),
-                    data);
+            String[] data = { screening.getMovie().getTitle(), screening.getScreeningAuditorium().getName(),screening.getDate().toString(), selectedSeat.getRow(), "" + selectedSeat.getSeatNumber() };
+            user.getMainFrame().getController().sendMsg(UserOptions.SELECT_SEAT.name(), UserOptions.SELECT_SEAT.name(),data);
             Msg anwer = Msg.valueOf(user.getMainFrame().getController().reciveMsg().getMessage());
 
             switch (anwer) {

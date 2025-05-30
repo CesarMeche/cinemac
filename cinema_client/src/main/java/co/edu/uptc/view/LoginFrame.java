@@ -14,46 +14,53 @@ public class LoginFrame extends JPanel {
 
     public LoginFrame(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
-        initPanel();;
+        initPanel();
     }
 
-    public void initPanel() {
+    private void initPanel() {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Panel con los campos de entrada
+        // Panel con campos de entrada
         JPanel inputPanel = new JPanel(new GridLayout(2, 2, 5, 5));
         inputPanel.add(new JLabel("Usuario:"));
-        usuarioField = new JTextField();
+        usuarioField = new JTextField("user");
         inputPanel.add(usuarioField);
 
+        inputPanel.add(new JLabel("Contraseña:"));
+        contrasenaField = new JPasswordField();
+        inputPanel.add(contrasenaField);
 
         add(inputPanel, BorderLayout.CENTER);
 
+        // Botón único de "Entrar"
         entrarButton = new JButton("Entrar");
-        JPanel b= new JPanel();
         initButton();
-        b.add(entrarButton);
-        JButton userBtu = new JButton("user");
-        userBtu.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                mainFrame.showUserPanel();
-                mainFrame.getController().sendMsg(TOOL_TIP_TEXT_KEY, "user", null);
-            }
-            
-        });
-        b.add(userBtu);
-        add(b, BorderLayout.SOUTH);
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(entrarButton);
+        add(buttonPanel, BorderLayout.SOUTH);
     }
 
     private void initButton() {
         entrarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mainFrame.showAdminPanel();
-                mainFrame.getController().sendMsg(TOOL_TIP_TEXT_KEY, "admin", null);
+                String username = usuarioField.getText();
+                String password = new String(contrasenaField.getPassword());
+
+                if ("user".equalsIgnoreCase(username)) {
+                    mainFrame.showUserPanel();
+                    mainFrame.getController().sendMsg("", "user", "user");
+                } else if ("admin".equalsIgnoreCase(username)) {
+                    mainFrame.showAdminPanel();
+                    mainFrame.getController().sendMsg("", "admin", null);
+                } else {
+                    // Mensaje de error
+                    JOptionPane.showMessageDialog(LoginFrame.this,
+                            "Usuario no reconocido",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
     }

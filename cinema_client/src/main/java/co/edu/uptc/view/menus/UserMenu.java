@@ -16,7 +16,6 @@ import co.edu.uptc.view.userOptions.MovieShedule;
 public class UserMenu extends JPanel {
     private UserPanel userPanel;
     private JButton getMovieScheduleBtn;
-    private JButton createBookBtn;
     private JButton checkBookBtn;
     private JButton validateBookBtn;
     private JButton cancelBookBtn;
@@ -30,16 +29,14 @@ public class UserMenu extends JPanel {
         title.setFont(new Font("Arial", Font.BOLD, 20));
         add(title, BorderLayout.NORTH);
 
-        JPanel buttonPanel = new JPanel(new GridLayout(5, 1, 10, 10));
+        JPanel buttonPanel = new JPanel(new GridLayout(4, 1, 10, 10));
 
         getMovieScheduleBtn = new JButton("Ver Horarios de Películas");
-        createBookBtn = new JButton("Reservar");
         checkBookBtn = new JButton("Consultar Reserva");
         validateBookBtn = new JButton("Validar Reserva");
         cancelBookBtn = new JButton("Cancelar Reserva");
 
         buttonPanel.add(getMovieScheduleBtn);
-        buttonPanel.add(createBookBtn);
         buttonPanel.add(checkBookBtn);
         buttonPanel.add(validateBookBtn);
         buttonPanel.add(cancelBookBtn);
@@ -50,7 +47,6 @@ public class UserMenu extends JPanel {
 
     private void initActions() {
         getMovieScheduleBtn.addActionListener(e -> handleAction("GET_MOVIE_SCHEDULE"));
-        createBookBtn.addActionListener(e -> handleAction("CREATE_BOOK"));
         checkBookBtn.addActionListener(e -> handleAction("CHECK_BOOK"));
         validateBookBtn.addActionListener(e -> handleAction("VALIDATE_BOOK"));
         cancelBookBtn.addActionListener(e -> handleAction("CANCEL_BOOK"));
@@ -61,9 +57,6 @@ public class UserMenu extends JPanel {
         switch (userOptions) {
             case GET_MOVIE_SCHEDULE:
                 getMovieSchedule();
-                break;
-            case CREATE_BOOK:
-                createBook();
                 break;
             case CHECK_BOOK:
                 checkBook();
@@ -83,10 +76,6 @@ public class UserMenu extends JPanel {
         MovieShedule ms = (MovieShedule) userPanel.getPanels().get(UserOptions.GET_MOVIE_SCHEDULE.name());
         ms.init();
         userPanel.showPanel(UserOptions.GET_MOVIE_SCHEDULE.name());
-    }
-
-    private void createBook() {
-        userPanel.showPanel(UserOptions.CREATE_BOOK.name());
     }
 
     private void checkBook() {
