@@ -12,13 +12,12 @@ import javax.swing.JPanel;
 import co.edu.uptc.enums.UserOptions;
 import co.edu.uptc.view.panel.UserPanel;
 import co.edu.uptc.view.userOptions.MovieShedule;
+import co.edu.uptc.view.userOptions.ValidateBook;
 
 public class UserMenu extends JPanel {
     private UserPanel userPanel;
     private JButton getMovieScheduleBtn;
-    private JButton checkBookBtn;
     private JButton validateBookBtn;
-    private JButton cancelBookBtn;
 
     public UserMenu(UserPanel userPanel) {
         this.userPanel = userPanel;
@@ -32,14 +31,10 @@ public class UserMenu extends JPanel {
         JPanel buttonPanel = new JPanel(new GridLayout(4, 1, 10, 10));
 
         getMovieScheduleBtn = new JButton("Ver Horarios de Películas");
-        checkBookBtn = new JButton("Consultar Reserva");
         validateBookBtn = new JButton("Validar Reserva");
-        cancelBookBtn = new JButton("Cancelar Reserva");
 
         buttonPanel.add(getMovieScheduleBtn);
-        buttonPanel.add(checkBookBtn);
         buttonPanel.add(validateBookBtn);
-        buttonPanel.add(cancelBookBtn);
 
         add(buttonPanel, BorderLayout.CENTER);
         initActions();
@@ -47,9 +42,7 @@ public class UserMenu extends JPanel {
 
     private void initActions() {
         getMovieScheduleBtn.addActionListener(e -> handleAction("GET_MOVIE_SCHEDULE"));
-        checkBookBtn.addActionListener(e -> handleAction("CHECK_BOOK"));
         validateBookBtn.addActionListener(e -> handleAction("VALIDATE_BOOK"));
-        cancelBookBtn.addActionListener(e -> handleAction("CANCEL_BOOK"));
     }
 
     private void handleAction(String action) {
@@ -58,14 +51,8 @@ public class UserMenu extends JPanel {
             case GET_MOVIE_SCHEDULE:
                 getMovieSchedule();
                 break;
-            case CHECK_BOOK:
-                checkBook();
-                break;
             case VALIDATE_BOOK:
                 validateBook();
-                break;
-            case CANCEL_BOOK:
-                cancelBook();
                 break;
             default:
                 System.out.println("Acción no reconocida: " + action);
@@ -78,15 +65,12 @@ public class UserMenu extends JPanel {
         userPanel.showPanel(UserOptions.GET_MOVIE_SCHEDULE.name());
     }
 
-    private void checkBook() {
-        userPanel.showPanel(UserOptions.CHECK_BOOK.name());
-    }
 
     private void validateBook() {
+        ValidateBook vb=(ValidateBook) userPanel.getPanels().get(UserOptions.VALIDATE_BOOK.name());
+        vb.init();
         userPanel.showPanel(UserOptions.VALIDATE_BOOK.name());
     }
 
-    private void cancelBook() {
-        userPanel.showPanel(UserOptions.CANCEL_BOOK.name());
-    }
+
 }

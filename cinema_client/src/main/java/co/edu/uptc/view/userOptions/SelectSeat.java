@@ -59,7 +59,7 @@ public class SelectSeat extends JPanel {
         JButton backButton = new JButton("Comprar");
         backButton.addActionListener(e -> {
             String[] data = { screening.getMovie().getTitle(), screening.getScreeningAuditorium().getName(),screening.getDate().toString(), selectedSeat.getRow(), "" + selectedSeat.getSeatNumber() };
-            user.getMainFrame().getController().sendMsg(UserOptions.SELECT_SEAT.name(), UserOptions.SELECT_SEAT.name(),data);
+            user.getMainFrame().getController().sendMsg(UserOptions.CREATE_BOOK.name(), UserOptions.CREATE_BOOK.name(),data);
             Msg anwer = Msg.valueOf(user.getMainFrame().getController().reciveMsg().getMessage());
 
             switch (anwer) {

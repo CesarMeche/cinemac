@@ -31,7 +31,7 @@ public class Controller {
         try {
             JsonResponse<T> response = new JsonResponse<>(type, status, data);
             conectionManager.sendMessage(response);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             // Aquí puedes agregar manejo adicional si es necesario
         }

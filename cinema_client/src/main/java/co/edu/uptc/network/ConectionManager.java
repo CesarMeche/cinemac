@@ -2,8 +2,10 @@ package co.edu.uptc.network;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import co.edu.uptc.structures.avltree.AVLTree;
 import co.edu.uptc.structures.avltree.AVLTreeDeserializer;
@@ -24,7 +26,7 @@ public class ConectionManager {
     public ConectionManager(Socket socket) {
         this.socket = socket;
 
-        // 👉 Inicializa ObjectMapper con soporte para LocalDateTime y tu AVLTree
+        // Inicializa ObjectMapper con soporte para LocalDateTime y tu AVLTree
         this.mapper = new ObjectMapper();
         this.mapper.registerModule(new JavaTimeModule());
 
@@ -42,20 +44,26 @@ public class ConectionManager {
         }
     }
 
-    public void sendMessage(JsonResponse<?> message) throws IOException{
-      
+    public void sendMessage(JsonResponse<?> message) {
+        try {
             String jsonMessage = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(message);
             dataOutput.writeUTF(jsonMessage);
             dataOutput.flush();
-      
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public <T> JsonResponse<T> receiveMessage(Class<T> clazz) throws IOException {
-        String jsonMessage = dataInput.readUTF();
-        // Para que Jackson deserialice JsonResponse<T> correctamente
-        TypeReference<JsonResponse<T>> typeRef = new TypeReference<JsonResponse<T>>() {};
-        return mapper.readValue(jsonMessage, typeRef);
-    }
+    String jsonMessage = dataInput.readUTF();
+
+    // Usamos TypeFactory para crear el tipo completo: JsonResponse<T>
+    JavaType javaType = mapper.getTypeFactory()
+            .constructParametricType(JsonResponse.class, clazz);
+
+    return mapper.readValue(jsonMessage, javaType);
+}
+
 
     public JsonResponse<?> receiveMessage() throws IOException {
         String jsonMessage = dataInput.readUTF();

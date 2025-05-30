@@ -1,6 +1,9 @@
 package co.edu.uptc.view;
 
 import javax.swing.*;
+
+import co.edu.uptc.enums.Msg;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,26 +45,40 @@ public class LoginFrame extends JPanel {
     }
 
     private void initButton() {
-        entrarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String username = usuarioField.getText();
-                String password = new String(contrasenaField.getPassword());
+    entrarButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String username = usuarioField.getText();
+            String password = new String(contrasenaField.getPassword());
 
-                if ("user".equalsIgnoreCase(username)) {
-                    mainFrame.showUserPanel();
-                    mainFrame.getController().sendMsg("", "user", "user");
-                } else if ("admin".equalsIgnoreCase(username)) {
+            if ("admin".equalsIgnoreCase(username)) {
+                mainFrame.getController().sendMsg("", "admin", null);
+                Msg response = Msg.valueOf(
+                        mainFrame.getController().reciveMsg().getMessage());
+                if (response == Msg.DONE) {
                     mainFrame.showAdminPanel();
-                    mainFrame.getController().sendMsg("", "admin", null);
                 } else {
-                    // Mensaje de error
-                    JOptionPane.showMessageDialog(LoginFrame.this,
-                            "Usuario no reconocido",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
+                    mostrarErrorLogin();
+                }
+            } else {
+                mainFrame.getController().sendMsg("", "user", username);
+                Msg response = Msg.valueOf(
+                        mainFrame.getController().reciveMsg().getMessage());
+                if (response == Msg.DONE) {
+                    mainFrame.setTitle(username);
+                    mainFrame.showUserPanel();
+                } else {
+                    mostrarErrorLogin();
                 }
             }
-        });
-    }
+        }
+    });
+}
+
+private void mostrarErrorLogin() {
+    JOptionPane.showMessageDialog(LoginFrame.this,
+            "Usuario no reconocido o error en la autenticación",
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
+}
 }

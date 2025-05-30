@@ -17,18 +17,18 @@ public class MainFrame extends JFrame {
     private Controller controller;
     public MainFrame(Controller controller) {
         this.controller=controller;
-        loginPanel = new LoginFrame(this); // Le pasamos referencia al frame
+        loginPanel = new LoginFrame(this); 
         init();
     }
 
     public void init() {
-        setTitle("Sistema");
+        setTitle("Cinema");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 1000);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        add(loginPanel, BorderLayout.CENTER); // Mostrar login por defecto
+        add(loginPanel, BorderLayout.CENTER); 
         setVisible(true);
     }
 
@@ -38,6 +38,7 @@ public class MainFrame extends JFrame {
         }
         adminPanel = new AdminPanel(this);
         add(adminPanel, BorderLayout.CENTER);
+        setTitle("admin");
         revalidate(); 
         repaint();   
     }

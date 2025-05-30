@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.*;
+import java.time.LocalDate;
 import java.util.Properties;
 
 import org.jdatepicker.impl.*;
@@ -32,12 +32,12 @@ public class ReportPanel extends JPanel {
         JPanel formPanel = new JPanel(new GridLayout(4, 2, 10, 10));
 
         // First Date
-        formPanel.add(new JLabel("First Date:"));
+        formPanel.add(new JLabel("Fecha Inicial:"));
         firstDatePicker = createDatePicker();
         formPanel.add(firstDatePicker);
 
         // Second Date
-        formPanel.add(new JLabel("Second Date:"));
+        formPanel.add(new JLabel("Fecha Final:"));
         secondDatePicker = createDatePicker();
         formPanel.add(secondDatePicker);
 
@@ -51,65 +51,67 @@ public class ReportPanel extends JPanel {
     }
 
     private void initListeners() {
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                admin.backToMenu();
-            }
-        });
+        backButton.addActionListener(e -> admin.backToMenu());
 
-        submitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                sendReportDates();
-            }
-        });
+        submitButton.addActionListener(e -> sendReportDates());
     }
 
     private JDatePanelImpl createDatePicker() {
         SqlDateModel model = new SqlDateModel();
         Properties p = new Properties();
-        p.put("text.today", "Today");
-        p.put("text.month", "Month");
-        p.put("text.year", "Year");
+        p.put("text.today", "Hoy");
+        p.put("text.month", "Mes");
+        p.put("text.year", "Año");
 
-        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-
-        return datePanel;
+        return new JDatePanelImpl(model, p);
     }
 
-    private String stringToLocalDate(JDatePanelImpl datePicker) {
-        // Retrieve first date
-        StringBuilder date = new StringBuilder();
-        date.append(datePicker.getModel().getYear());
-        if ((datePicker.getModel().getMonth() + 1) < 10) {
-            date.append("-0" + (datePicker.getModel().getMonth() + 1));
-        } else {
-            date.append("-" + (datePicker.getModel().getMonth() + 1));
+    private LocalDate getLocalDate(JDatePanelImpl datePicker) {
+        SqlDateModel model = (SqlDateModel) datePicker.getModel();
+        if (!model.isSelected()) {
+            return null;
         }
-        date.append("-" + datePicker.getModel().getDay() + "T00:00");
-        return date.toString();
+        return LocalDate.of(model.getYear(), model.getMonth() + 1, model.getDay());
     }
 
     private void sendReportDates() {
-        //TODO por hacer
-        try {
-            admin.getMainFrame().getController().sendMsg(
-                    AdminOptions.GENERATE_REPORT.name(),
-                    Msg.DONE.name(),
-                    new String[] { stringToLocalDate(firstDatePicker), stringToLocalDate(secondDatePicker) });
+    try {
+        LocalDate firstDate = getLocalDate(firstDatePicker);
+        LocalDate secondDate = getLocalDate(secondDatePicker);
 
-            boolean success = (boolean) admin.getMainFrame().getController().reciveMsg().getData();
-            if (success) {
-                JOptionPane.showMessageDialog(this, "Report generated successfully!");
-            } else {
-                JOptionPane.showMessageDialog(this, "Report generation failed!");
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-            System.err.println(e.getMessage());
-        } finally {
-            System.out.println("Report generation operation finalized.");
+        if (firstDate == null || secondDate == null) {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione ambas fechas.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
+
+        if (firstDate.isAfter(secondDate)) {
+            JOptionPane.showMessageDialog(this, "La fecha inicial no puede ser posterior a la fecha final.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String[] dateRange = {
+            firstDate.atStartOfDay().toString(),
+            secondDate.atStartOfDay().toString()
+        };
+
+        admin.getMainFrame().getController().sendMsg(
+                AdminOptions.GENERATE_REPORT.name(),
+                Msg.DONE.name(),
+                dateRange
+        );
+
+        Object data = admin.getMainFrame().getController().reciveMsg().getData();
+        int reportCount = (int) data;
+
+        if (reportCount > 0) {
+            JOptionPane.showMessageDialog(this, "¡Reporte generado exitosamente! Cantidad: " + reportCount);
+        } else {
+            JOptionPane.showMessageDialog(this, "No se generaron reportes para el rango de fechas.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Ocurrió un error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
     }
+}
+
 }
