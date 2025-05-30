@@ -33,7 +33,6 @@ public class AdminPanel extends JPanel {
         contentPanel.add(new DeleteScreeningPanel(this), AdminOptions.DELETE_SCREENING.name());
         contentPanel.add(new ConfigAuditoriumPanel(this), AdminOptions.CONFIGURATE_AUDITORIUM.name());
         contentPanel.add(new ReportPanel(this), AdminOptions.GENERATE_REPORT.name());
-
         setLayout(new BorderLayout());
         add(contentPanel, BorderLayout.CENTER);
         showPanel(BUTTONS);
@@ -42,9 +41,10 @@ public class AdminPanel extends JPanel {
     public void showPanel(String name) {
         cardLayout.show(contentPanel, name);
     }
-        public void backToMenu(){
-           showPanel(BUTTONS);
-        
+
+    public void backToMenu() {
+        showPanel(BUTTONS);
+
     }
 
     public MainFrame getMainFrame() {
